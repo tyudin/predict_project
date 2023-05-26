@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Predict diabetes</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, public" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
+    
+        <link rel="stylesheet" type="text/css" href="/static/styles.css">
+    </head>
+    <body>
+        <script type="text/javascript">
+
+            function predict() {
+
+                let formData = new FormData(data_form);
+                
+                var age = formData.get("age");
+                var hyp = formData.get("hypertension");
+                var hd = formData.get("heart_disease");
+                var sm = formData.get("smoking_history");
+                var bmi = formData.get("bmi");
+                var hbl = formData.get("HbA1c_level");
+                var bgl = formData.get("blood_glucose_level");
+
+                var txt = `{"age":${age}, "hypertension":${hyp}, "heart_disease":${hd}, "smoking_history":${sm}, "bmi":${bmi}, "HbA1c_level":${hbl}, "blood_glucose_level":${bgl}}`;
+                console.log(txt);
+                
+                fetch(window.location.origin + '/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: txt
+                })
+                .then(response => response.json())
+                .then(response => print_result(response))
+                .catch((error) => {
+                    document.getElementById('predictions').innerHTML = `<p class="error">Error: ${error.message}</p>`;
+                });
+            }
+
+            function print_result(response) {
+                json_data = JSON.stringify(response);
+                console.log(json_data);
+                
+                document.getElementById('predictions').innerHTML = '<p></p>';
+
+                let data = JSON.parse(json_data);
+                if(data.hasOwnProperty('predictions')) { 
+                    let predictions = JSON.parse(data.predictions);
+                    let predict = predictions[0].predict;
+                    let proba = predictions[0].predict_proba;
+
+                    if(predict == 0) {
+                        document.getElementById('predictions').innerHTML = `<p class="normal">No diabetes, probability: ${proba}</p>`;
+                    }
+                    if(predict == 1) {
+                        document.getElementById('predictions').innerHTML = `<p class="warning">Diabetes!, probability: ${proba}</p>`;
+                    }
+                }
+
+                if(data.hasOwnProperty('error')) {
+                    let error = data.error; 
+                    document.getElementById('predictions').innerHTML = `<p class="error">API error: ${error}</p>`;
+                }
+
+            }
+
+        </script>
+        <div class="center">
+            <h1>Predict diabetes</h1>
+            <form method="post" action="#" id="data_form">
+                <div class="field">
+                    <label for="age">Age:</label><br>
+                    <input id="age" name="age" type="number" size="3" value="33">
+                </div>
+                <div class="field">
+                    <label for="hyp_fieldset">Hypertension (systolic pressure greater than or equal to 130, or a diastolic pressure greater than or equal to 80):</label>
+                    <fieldset id="hyp_fieldset">
+                        <legend>Select one:</legend>
+                        <div>
+                        <input type="radio" id="hyp_no" name="hypertension" value="0"
+                                checked>
+                        <label for="hyp_no">No</label>
+                        </div>
+                    
+                        <div>
+                        <input type="radio" id="hyp_yes" name="hypertension" value="1">
+                        <label for="hyp_yes">Yes</label>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="field">
+                    <label for="hd_fieldset">Heart disease (Coronary artery disease (CAD)):</label>
+                    <fieldset id="hd_fieldset">
+                        <legend>Select one:</legend>
+                        <div>
+                        <input type="radio" id="hd_no" name="heart_disease" value="0"
+                                checked>
+                        <label for="hd_no">No</label>
+                        </div>
+                    
+                        <div>
+                        <input type="radio" id="hd_yes" name="heart_disease" value="1">
+                        <label for="hd_yes">Yes</label>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="field">
+                    <label for="sm_fieldset">Smoking:</label>
+                    <fieldset id="sm_fieldset">
+                        <legend>Select one:</legend>
+                        <div>
+                        <input type="radio" id="sm_na" name="smoking_history" value="-1"
+                                checked>
+                        <label for="sm_na">Unknown</label>
+                        </div>
+                    
+                        <div>
+                        <input type="radio" id="sm_0" name="smoking_history" value="0">
+                        <label for="sm_0">Never</label>
+                        </div>
+
+                        <div>
+                            <input type="radio" id="sm_1" name="smoking_history" value="1">
+                            <label for="sm_1">Former</label>
+                        </div>
+
+                        <div>
+                            <input type="radio" id="sm_2" name="smoking_history" value="2">
+                            <label for="sm_2">Current</label>
+                        </div>
+
+                        <div>
+                            <input type="radio" id="sm_3" name="smoking_history" value="3">
+                            <label for="sm_3">Not current</label>
+                        </div>
+                        
+                        <div>
+                            <input type="radio" id="sm_4" name="smoking_history" value="4">
+                            <label for="sm_4">Ever</label>
+                        </div>
+                        
+                    </fieldset>
+                </div>
+                <div class="field">
+                    <label for="bmi">BMI (Body mass index):</label><br>
+                    <input id="bmi" name="bmi" type="text" value="37.5"> 
+                </div>
+                <div class="field">
+                    <label for="hba1c">HbA1c level (Hemoglobin A1c in %) (4-15):</label><br>
+                    <input id="hba1c" name="HbA1c_level" type="text" value="5.5"> 
+                </div>
+                <div class="field">
+                    <label for="blood_glucose">Blood glucose level (mg/dL) (5-500):</label><br>
+                    <input id="blood_glucose" name="blood_glucose_level" type="text" value="120.5">
+                </div>
+                <div class="field">
+                    <button type="button" id="predict_btn" onclick="predict()">Predict</button>
+                </div>
+            </form>
+            <div class="predictions" id="predictions">
+                
+            </div>
+        </div>
+    </body>
+</html>

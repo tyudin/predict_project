@@ -1,0 +1,108 @@
+body {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 1.1em;    
+}
+
+.center {
+    margin: auto;
+    width: 600px;
+    background-color: wheat;
+    padding: 10px;
+    border-radius: 6px;
+}
+
+h1 {
+    text-transform: uppercase;
+    color:brown;
+    text-align: center;
+}
+
+form {
+    position: relative;
+    width: 600px;
+}
+
+.field {
+    position: relative;
+    margin: 0px 0px 30px 0px;
+}
+
+.field label {
+    position: relative;
+    size: 1.2em;
+    font-weight: bold;
+    top: -5px;
+}
+
+.field fieldset {
+    position: relative;
+    width: 270px;
+}
+
+.field input[type="radio"] {
+    position: relative;
+    font-size: 1em;
+    height: 22px;
+    margin: 0px 0px 0px 0px;
+}
+
+.field input[type="number"] {
+    position: relative;
+    font-size: 1.2em;
+    margin: 0px 0px 0px 0px;
+    width: 300px;
+    padding: 5px;
+}
+
+.field input[type="text"] {
+    position: relative;
+    font-size: 1.2em;
+    margin: 0px 0px 0px 0px;
+    width: 300px;
+    padding: 5px;
+}
+
+button {
+    text-align: center;
+    position: relative;
+    width: 600px;
+    height: 50px;
+    font-size: 1.2em;
+    margin: auto;
+    background-color: brown;
+    color:white;
+    border-radius: 6px;
+}
+
+.predictions {
+    position: relative;
+    text-align: center;
+    width: 600px;
+    font-size: 1.2em;
+    font-weight: 500;
+    margin: 10px 0px 0px 0px;
+    border-radius: 6px;
+    border-color: white;
+}
+
+.normal {
+    background-color: green;
+    color: white;
+    padding: 10px;
+}
+
+.warning {
+    background-color: red;
+    color: white;
+    padding: 10px;
+}
+
+.error {
+    background-color: red;
+    color: white;
+    font-size:0.91em;
+    padding: 10px;
+}
