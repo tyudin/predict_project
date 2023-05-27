@@ -2,7 +2,7 @@ import json
 import dill
 import pandas as pd
 from logging.config import dictConfig
-from flask import Flask, make_response, jsonify, request, abort, render_template, send_from_directory
+from flask import Flask, make_response, jsonify, request, redirect, abort, render_template, send_from_directory
 from flask_cors import CORS
 
 dictConfig({
@@ -78,6 +78,10 @@ def validate(data: dict) -> tuple[bool, str]:
 
 
 def make_dataframe_from_data(data: str|dict) -> tuple[pd.DataFrame | None, str]:
+    """ Преобразование полученных данных в датасет для модели 
+        Данные могут поступать сюда в виде json или в виде готового словаря
+        Возвращается кортеж: (датафрейм или None, текст ошибки или пустая строка)
+    """
     if isinstance(data, str):
         data_dict = json.loads(data)
     elif isinstance(data, dict):
@@ -95,6 +99,7 @@ def make_dataframe_from_data(data: str|dict) -> tuple[pd.DataFrame | None, str]:
 
 
 def classify_data(df: pd.DataFrame) -> pd.DataFrame:
+    """ Классификация полученных данных """
     preds_proba = MODEL.predict_proba(df)[:, 1]
     preds = preds_proba > MODEL.my_thresholds_level
     df = pd.DataFrame({'predict': preds, 'predict_proba': preds_proba}, index=[0], dtype='float')
@@ -103,21 +108,30 @@ def classify_data(df: pd.DataFrame) -> pd.DataFrame:
 
 @app.route('/')
 def index():
-    return make_response(jsonify({'info': 'Hello from server!'}), 200)
+    """ Перенаправление на страницу с формой для заполнения параметров """
+    # return make_response(jsonify({'info': 'Hello from server!'}), 200)
+    return redirect("/predict", code=302)
 
 
 @app.route('/static/<path:name>', methods=['GET'])
 def send_static(name):
+    """ Для отправки статичных файлов: styles.css и других """
     return send_from_directory('static', name)
 
 
 @app.route('/predict', methods=['GET'])
 def predict_form():
-    return make_response(render_template('predict.html', ), 200)
+    """ При обращении через броузер выдается html-страница с формой запроса параметров. 
+        javascript код на странице, собирает данные формы и делает запрос в апи, получает результат и
+        отображает его на этой же странице без перезагрузки сраницы
+    """
+    info = {'threshold': MODEL.my_thresholds_level}
+    return make_response(render_template('predict.html', info=info), 200)
 
 
 @app.route("/predict", methods=['POST'])
 def predict():
+    """ Главный метод: получает json-данные, отправляет результаты предсказания или ошибку """
     data_json = request.get_json(silent=True, force=True)
     logger.info(f"predict: data={data_json}")
     

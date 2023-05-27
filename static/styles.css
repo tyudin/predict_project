@@ -11,7 +11,7 @@ body {
     width: 600px;
     background-color: wheat;
     padding: 10px;
-    border-radius: 6px;
+    border-radius: 8px;
 }
 
 h1 {
@@ -40,6 +40,7 @@ form {
 .field fieldset {
     position: relative;
     width: 270px;
+    border-radius: 6px;
 }
 
 .field input[type="radio"] {
@@ -55,6 +56,7 @@ form {
     margin: 0px 0px 0px 0px;
     width: 300px;
     padding: 5px;
+    border-radius: 6px;
 }
 
 .field input[type="text"] {
@@ -63,6 +65,7 @@ form {
     margin: 0px 0px 0px 0px;
     width: 300px;
     padding: 5px;
+    border-radius: 6px;
 }
 
 button {
@@ -74,7 +77,7 @@ button {
     margin: auto;
     background-color: brown;
     color:white;
-    border-radius: 6px;
+    border-radius: 8px;
 }
 
 .predictions {
@@ -105,4 +108,10 @@ button {
     color: white;
     font-size:0.91em;
     padding: 10px;
+}
+
+.info p {
+    margin: 0px 0px 10px 0px;
+    font-size: 0.9em;
+    font-weight: 600;
 }

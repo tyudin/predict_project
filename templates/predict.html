@@ -148,7 +148,7 @@
                 </div>
                 <div class="field">
                     <label for="bmi">BMI (Body mass index):</label><br>
-                    <input id="bmi" name="bmi" type="text" value="37.5"> 
+                    <input id="bmi" name="bmi" type="text" value="37.5" title="BMI formula: mass(kg)/height(m)^2"> 
                 </div>
                 <div class="field">
                     <label for="hba1c">HbA1c level (Hemoglobin A1c in %) (4-15):</label><br>
@@ -157,6 +157,10 @@
                 <div class="field">
                     <label for="blood_glucose">Blood glucose level (mg/dL) (5-500):</label><br>
                     <input id="blood_glucose" name="blood_glucose_level" type="text" value="120.5">
+                </div>
+                <div class="info">
+                    <p>Info:</p>
+                    <p>Probability threshold for positive class: {{ info['threshold'] }}</p>
                 </div>
                 <div class="field">
                     <button type="button" id="predict_btn" onclick="predict()">Predict</button>
